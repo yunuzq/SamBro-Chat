@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMBRO Chat</title>
+    <link rel="stylesheet" href="SamBro.css">
+</head>
+<body>
+    <div id="giris-ekrani" class="aktif">
+        <h2>Sohbete giriş yapmak için bir isim giriniz.</h2>
+        <input type="text" id="isim-girisi" placeholder="İsminiz...">
+        <button id="giris-butonu">Giriş Yap</button>
+    </div>
+
+    <div id="chat-ekrani">
+        <h2>Hoşgeldin, <span id="kullanici-adi"></span>!</h2>
+        <div id="messages"></div>
+        <input type="text" id="mesaj-girisi" placeholder="Mesajınızı giriniz...">
+        <button id="gonder-butonu">Mesajı Gönder</button>
+    </div>
+
+    <script>
+        let loginEkrani = document.getElementById("giris-ekrani");
+        let chatEkrani = document.getElementById("chat-ekrani");
+        let isimInput = document.getElementById("isim-girisi");
+        let girisButonu = document.getElementById("giris-butonu");
+        let mesajAlani = document.getElementById("mesaj-girisi");
+        let gonderButonu = document.getElementById("gonder-butonu");
+        let mesajKutusu = document.getElementById("messages");
+        let isimYaz = document.getElementById("kullanici-adi");
+
+    
+        let isim = "";
+
+        //giriş butonnuna basılınca fonksiyon çalışsın
+        girisButonu.onclick = function () {
+            if(isimInput.value === "") {
+                alert("isim kutusu boş bırakılamaz!");l
+                return;
+                
+            }
+            
+            isim = isimInput.value.trim()
+
+
+            loginEkrani.style.display = "none";
+            chatEkrani.style.display = "block";
+
+            isimYaz.textContent = isim;
+
+            mesajlariYukle();
+        };
+
+        gonderButonu.onclick = function () {
+            const mesajMetni = mesajAlani.value.trim();
+
+        if (mesajMetni === "") return;
+            const mesaj = {
+                user: isim,
+                text: mesajMetni
+            }
+            const eskiMesajlar = JSON.parse(localStorage.getItem("chat_messages") || "[]");
+            eskiMesajlar.push(mesaj); 
+
+            localStorage.setItem("chat_messages", JSON.stringify(eskiMesajlar));
+            
+            mesajEkle(mesaj);
+
+            mesajAlani.value = "";
+    
+        };
+
+        
+        function mesajEkle(mesaj) {
+            const div = document.createElement("div");
+            div.className = "message";
+            div.innerHTML = `<strong>${mesaj.user}</strong>: ${mesaj.text}`;
+            mesajKutusu.appendChild(div);
+
+        }
+
+        
+        function mesajlariYukle() {
+            mesajKutusu.innerHTML = "";
+            const tumMesajlar = JSON.parse(localStorage.getItem("chat_messages") || "[]");
+            tumMesajlar.forEach(mesajEkle);
+        }
+
+
+        window.addEventListener("storage", function(){
+            mesajlariYukle();
+        });
+
+        localStorage.removeItem("chat_messages");
+
+        mesajAlani.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                gonderButonu.click();
+            }
+        });
+
+    </script>
+    
+</body>
+</html>
