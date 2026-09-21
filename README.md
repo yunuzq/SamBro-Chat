@@ -1,2 +1,2 @@
 # SamBro-Chat
-staj için yapılmış aynı tarayıcı üzerinden sohbet edebileceğin bir html uygulaması
+kendimi denemek için yaptığım aynı tarayıcı üzerinden mesaj gönderebileceğim bir html uygulaması
